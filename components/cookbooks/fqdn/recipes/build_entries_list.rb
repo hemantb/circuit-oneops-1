@@ -171,6 +171,12 @@ end
 
 # values using DependsOn's dns_record attr
 deps = node.workorder.payLoad[:DependsOn].select { |d| d[:ciAttributes].has_key? "dns_record" }
+
+if is_hostname_entry
+  ci_name = node.workorder.cloud.ciId.to_s+'-'+node["workorder"]["rfcCi"]["ciName"].split('-').last.to_i.to_s
+  deps = node.workorder.payLoad[:RequiresComputes].select { |r| r[:ciClassName] =~ /Compute/ && r[:ciName].include?(ci_name) }
+end
+
 values = get_dns_values(deps)
 
 # cloud-level add entry - will loop thru and cleanup & create them later
