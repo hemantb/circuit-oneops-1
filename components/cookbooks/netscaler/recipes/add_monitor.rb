@@ -101,7 +101,7 @@ node.monitors.each do |mon|
       :method => :get, 
       :path =>"/nitro/v1/config/lbmonitor/#{monitor_name}").body)        
     
-    if resp_obj["message"] !~ /No such resource/
+    if (resp_obj["message"] !~ /No such resource/) && !(monitor_name.start_with? 'generic')
       type = resp_obj['lbmonitor'][0]['type']
 
       Chef::Log.info("removing monitor: #{monitor_name} from previous az / netscaler.")              
