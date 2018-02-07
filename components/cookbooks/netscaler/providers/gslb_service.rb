@@ -440,12 +440,12 @@ def create_gslb_service
         Chef::Log.info("Lbmonitor Binding with Gslbservice #{lbmon_gslbsvc_obj.inspect}")
         lbmon_gslbsvc_obj['lbmonbindings_binding'][0]['lbmonbindings_service_binding'].each do |lb_gsvc|
           binding = { :monitor_name => monitor_name, :servicename => lb_gsvc['servicename'] }
-	        Chef::Log.info("binding being deleted: #{binding.inspect}")
+	  Chef::Log.info("binding being deleted: #{binding.inspect}")
           req = URI::encode('object={"params":{"action": "unbind"}, "gslbservice_lbmonitor_binding" : ' + JSON.dump(binding) + '}')
-	        resp_obj = JSON.parse(conn.request(
-          :method=> :post,
-          :path=>"/nitro/v1/config/gslbservice_lbmonitor_binding/#{gslb_service_name}",
-          :body => req).body)
+	  resp_obj = JSON.parse(conn.request(
+             :method=> :post,
+             :path=>"/nitro/v1/config/gslbservice_lbmonitor_binding/#{gslb_service_name}",
+             :body => req).body)
           if ![0,258].include?(resp_obj["errorcode"])
             Chef::Log.error( "delete bind #{binding.inspect} resp: #{resp_obj.inspect}")
             exit 1
